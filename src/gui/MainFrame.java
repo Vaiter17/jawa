@@ -17,6 +17,7 @@ public class MainFrame extends JFrame {
     private JComboBox<Symptom> symptomCombo;
     private JSlider painSlider;
     private JCheckBox manualOverrideCheck;
+    private JTextField customSymptomField;
     private JSpinner manualScoreSpinner;
     private JTable queueTable;
     private DefaultTableModel tableModel;
@@ -36,7 +37,7 @@ public class MainFrame extends JFrame {
     private void initUI() {
         setLayout(new BorderLayout(10, 10));
         
-        JPanel regPanel = new JPanel(new GridLayout(6, 2, 5, 5));
+        JPanel regPanel = new JPanel(new GridLayout(7, 2, 5, 5));
         regPanel.setBorder(BorderFactory.createTitledBorder("Register New Patient"));
         
         regPanel.add(new JLabel("Patient Name:"));
@@ -58,8 +59,13 @@ public class MainFrame extends JFrame {
         regPanel.add(painSlider);
         
         regPanel.add(new JLabel("Manual Override?"));
-        manualOverrideCheck = new JCheckBox("Enable Manual Score");
+        manualOverrideCheck = new JCheckBox("Enable Custom Entry & Score");
         regPanel.add(manualOverrideCheck);
+        
+        regPanel.add(new JLabel("Custom Symptom:"));
+        customSymptomField = new JTextField();
+        customSymptomField.setEnabled(false);
+        regPanel.add(customSymptomField);
         
         regPanel.add(new JLabel("Manual Score (1=Critical, 10=Minor):"));
         manualScoreSpinner = new JSpinner(new SpinnerNumberModel(5, 1, 10, 1));
@@ -69,6 +75,7 @@ public class MainFrame extends JFrame {
         manualOverrideCheck.addActionListener(e -> {
             boolean selected = manualOverrideCheck.isSelected();
             manualScoreSpinner.setEnabled(selected);
+            customSymptomField.setEnabled(selected);
             painSlider.setEnabled(!selected);
             symptomCombo.setEnabled(!selected);
         });
@@ -119,19 +126,29 @@ public class MainFrame extends JFrame {
             return;
         }
         
-        Symptom selectedSymptom = (Symptom) symptomCombo.getSelectedItem();
-        int pain = painSlider.getValue();
         boolean manual = manualOverrideCheck.isSelected();
-        int mScore = (int) manualScoreSpinner.getValue();
-        
-        String symptomName = selectedSymptom != null ? selectedSymptom.getName() : "Unknown";
+        String symptomName;
+        int mScore = 5;
+        int pain = painSlider.getValue();
+
+        if (manual) {
+            symptomName = customSymptomField.getText().trim();
+            if (symptomName.isEmpty()) symptomName = "Custom Symptom";
+            mScore = (int) manualScoreSpinner.getValue();
+            pain = 0; // Not applicable for manual
+        } else {
+            Symptom selectedSymptom = (Symptom) symptomCombo.getSelectedItem();
+            symptomName = selectedSymptom != null ? selectedSymptom.getName() : "Unknown";
+        }
         
         triageService.registerPatient(name, symptomName, pain, manual, mScore);
         
         nameField.setText("");
+        customSymptomField.setText("");
         painSlider.setValue(5);
         manualOverrideCheck.setSelected(false);
         manualScoreSpinner.setEnabled(false);
+        customSymptomField.setEnabled(false);
         symptomCombo.setEnabled(true);
         painSlider.setEnabled(true);
         
