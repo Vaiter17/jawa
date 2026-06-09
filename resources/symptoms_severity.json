@@ -1,0 +1,17 @@
+{
+  "Cardiac Arrest": { "category": "Chest/Cardiovascular", "baseSeverity": 1, "requiresPainScale": false },
+  "Heart Palpitations": { "category": "Chest/Cardiovascular", "baseSeverity": 3, "requiresPainScale": true },
+  "Severe Chest Pain": { "category": "Chest/Cardiovascular", "baseSeverity": 2, "requiresPainScale": true },
+  "Loss of Consciousness": { "category": "Head/Neurological", "baseSeverity": 1, "requiresPainScale": false },
+  "Severe Headache": { "category": "Head/Neurological", "baseSeverity": 4, "requiresPainScale": true },
+  "Seizure": { "category": "Head/Neurological", "baseSeverity": 2, "requiresPainScale": false },
+  "Amputation": { "category": "Musculoskeletal/Injury", "baseSeverity": 1, "requiresPainScale": false },
+  "Sprained Ankle": { "category": "Musculoskeletal/Injury", "baseSeverity": 8, "requiresPainScale": true },
+  "Broken Bone": { "category": "Musculoskeletal/Injury", "baseSeverity": 5, "requiresPainScale": true },
+  "Minor Cut": { "category": "Musculoskeletal/Injury", "baseSeverity": 9, "requiresPainScale": true },
+  "Severe Bleeding": { "category": "Musculoskeletal/Injury", "baseSeverity": 2, "requiresPainScale": false },
+  "Difficulty Breathing": { "category": "Respiratory", "baseSeverity": 2, "requiresPainScale": false },
+  "Asthma Attack": { "category": "Respiratory", "baseSeverity": 3, "requiresPainScale": true },
+  "Stomach Ache": { "category": "Gastrointestinal", "baseSeverity": 7, "requiresPainScale": true },
+  "Severe Abdominal Pain": { "category": "Gastrointestinal", "baseSeverity": 4, "requiresPainScale": true }
+}
