@@ -51,7 +51,7 @@ public class MainFrame extends JFrame {
         }
         regPanel.add(symptomCombo);
         
-        regPanel.add(new JLabel("Pain Level (1-10):"));
+        regPanel.add(new JLabel("Pain Level (10=Worst, 1=None):"));
         painSlider = new JSlider(1, 10, 5);
         painSlider.setMajorTickSpacing(1);
         painSlider.setPaintTicks(true);
@@ -98,9 +98,15 @@ public class MainFrame extends JFrame {
         queueTable.getTableHeader().setFont(new Font("Arial", Font.BOLD, 12));
         
         JScrollPane scrollPane = new JScrollPane(queueTable);
-        scrollPane.setBorder(BorderFactory.createTitledBorder("Current Waiting Queue (Min-Heap)"));
+        scrollPane.setBorder(BorderFactory.createTitledBorder("Current Waiting Queue (Min-Heap) [1=Critical, 10=Minor]"));
         
         JPanel actionPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        
+        JButton btnVisualize = new JButton("Visualize Algorithm");
+        btnVisualize.setBackground(new Color(52, 152, 219));
+        btnVisualize.setForeground(Color.WHITE);
+        btnVisualize.setFont(new Font("Arial", Font.BOLD, 12));
+        btnVisualize.addActionListener(e -> showVisualization());
         
         JButton btnUpdate = new JButton("Update Condition (Worsen)");
         btnUpdate.addActionListener(this::handleUpdatePriority);
@@ -111,6 +117,7 @@ public class MainFrame extends JFrame {
         btnTreat.setFont(new Font("Arial", Font.BOLD, 14));
         btnTreat.addActionListener(this::handleTreatPatient);
         
+        actionPanel.add(btnVisualize);
         actionPanel.add(btnUpdate);
         actionPanel.add(btnTreat);
         
@@ -187,6 +194,20 @@ public class MainFrame extends JFrame {
                 JOptionPane.showMessageDialog(this, "Invalid score. Must be between 1 and 10.");
             }
         }
+    }
+
+    private void showVisualization() {
+        String viz = triageService.getAlgorithmVisualization();
+        JTextArea textArea = new JTextArea(viz);
+        textArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
+        textArea.setEditable(false);
+        textArea.setBackground(new Color(40, 44, 52));
+        textArea.setForeground(new Color(171, 178, 191));
+        
+        JScrollPane scrollPane = new JScrollPane(textArea);
+        scrollPane.setPreferredSize(new Dimension(500, 400));
+        
+        JOptionPane.showMessageDialog(this, scrollPane, "Heap Algorithm Visualization", JOptionPane.INFORMATION_MESSAGE);
     }
 
     private void refreshTable() {

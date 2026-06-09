@@ -9,13 +9,17 @@ public class Patient implements Comparable<Patient> {
     private int painLevel;
     private int finalSeverityScore;
     private long arrivalTime;
+    private int baseSeverity;
+    private int painModifier;
 
-    public Patient(String name, String symptom, int painLevel, int finalSeverityScore) {
+    public Patient(String name, String symptom, int painLevel, int finalSeverityScore, int baseSeverity, int painModifier) {
         this.patientId = "P-" + (++idCounter);
         this.name = name;
         this.symptom = symptom;
         this.painLevel = painLevel;
         this.finalSeverityScore = finalSeverityScore;
+        this.baseSeverity = baseSeverity;
+        this.painModifier = painModifier;
         this.arrivalTime = System.currentTimeMillis();
     }
 
@@ -24,6 +28,8 @@ public class Patient implements Comparable<Patient> {
     public String getSymptom() { return symptom; }
     public int getPainLevel() { return painLevel; }
     public int getFinalSeverityScore() { return finalSeverityScore; }
+    public int getBaseSeverity() { return baseSeverity; }
+    public int getPainModifier() { return painModifier; }
     public long getArrivalTime() { return arrivalTime; }
 
     public void setFinalSeverityScore(int finalSeverityScore) {

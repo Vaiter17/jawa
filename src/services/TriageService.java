@@ -83,13 +83,29 @@ public class TriageService {
 
     public Patient registerPatient(String name, String symptomName, int painLevel, boolean isManualOverride, int manualScore) {
         int finalScore;
+        int baseSeverity = 0;
+        int painModifier = 0;
+        
         if (isManualOverride) {
             finalScore = manualScore;
+            baseSeverity = manualScore;
         } else {
+            Symptom symptom = symptomDatabase.get(symptomName);
+            if (symptom != null) {
+                baseSeverity = symptom.getBaseSeverity();
+                if (symptom.isRequiresPainScale()) {
+                    if (painLevel >= 9) painModifier = -3;
+                    else if (painLevel >= 7) painModifier = -2;
+                    else if (painLevel >= 5) painModifier = -1;
+                    else if (painLevel <= 2) painModifier = 1;
+                }
+            } else {
+                baseSeverity = 5;
+            }
             finalScore = calculateFinalSeverity(symptomName, painLevel);
         }
         
-        Patient p = new Patient(name, symptomName, painLevel, finalScore);
+        Patient p = new Patient(name, symptomName, painLevel, finalScore, baseSeverity, painModifier);
         queue.insert(p);
         return p;
     }
@@ -104,6 +120,10 @@ public class TriageService {
 
     public List<Patient> getQueueStatus() {
         return queue.getAllPatients();
+    }
+    
+    public String getAlgorithmVisualization() {
+        return queue.getHeapVisualization();
     }
     
     public List<Symptom> getAllSymptoms() {

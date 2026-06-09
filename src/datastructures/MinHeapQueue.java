@@ -97,4 +97,46 @@ public class MinHeapQueue {
     public boolean isEmpty() {
         return heap.isEmpty();
     }
+
+    public String getHeapVisualization() {
+        if (heap.isEmpty()) return "The heap is currently empty.";
+        StringBuilder sb = new StringBuilder();
+        sb.append("Underlying Min-Heap Array Representation:\n");
+        for (int i = 0; i < heap.size(); i++) {
+            Patient p = heap.get(i);
+            String details = String.format("Score: %d | Base: %d, Mod: %d", p.getFinalSeverityScore(), p.getBaseSeverity(), p.getPainModifier());
+            sb.append(String.format(" [%d] -> %s (%s)\n", i, p.getName(), details));
+        }
+        
+        sb.append("\n* Note on Scores: Priority Score 1 is the most critical.");
+        sb.append("\n* Note on Pain Modifiers: High pain (e.g. 10/10) results in a negative modifier,");
+        sb.append("\n  which lowers the Priority Score closer to 1 (making them treated faster).\n");
+        
+        sb.append("\nBinary Tree Structure (O(log N) heights):\n");
+        buildTreeString(sb, 0, "", true);
+        return sb.toString();
+    }
+
+    private void buildTreeString(StringBuilder sb, int index, String prefix, boolean isTail) {
+        if (index >= heap.size()) return;
+        
+        Patient p = heap.get(index);
+        String details = String.format("(Score: %d | Base: %d, Mod: %d)", p.getFinalSeverityScore(), p.getBaseSeverity(), p.getPainModifier());
+        
+        sb.append(prefix).append(isTail ? "\\-- " : "|-- ").append(p.getName())
+          .append(" ").append(details).append("\n");
+          
+        int left = leftChild(index);
+        int right = rightChild(index);
+        
+        boolean hasLeft = left < heap.size();
+        boolean hasRight = right < heap.size();
+        
+        if (hasLeft) {
+            buildTreeString(sb, left, prefix + (isTail ? "    " : "|   "), !hasRight);
+        }
+        if (hasRight) {
+            buildTreeString(sb, right, prefix + (isTail ? "    " : "|   "), true);
+        }
+    }
 }
